@@ -12,7 +12,7 @@ pub async fn get_questions(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    event!(target: "practical_rust_book", Level::INFO, "querying questions");
+    event!(target: "rust-web-warp-learning", Level::INFO, "querying questions");
     let mut pagination = Pagination::default();
 
     if !params.is_empty() {

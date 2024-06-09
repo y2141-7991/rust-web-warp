@@ -11,9 +11,9 @@ mod types;
 #[tokio::main]
 async fn main() {
     let log_filter = std::env::var("RUST_LOG")
-        .unwrap_or_else(|_| "practical_rust_book=info,warp=error".to_owned());
+        .unwrap_or_else(|_| "rust-web-warp-learning=info,warp=error".to_owned());
 
-    let store = store::Store::new("postgres://postgres:<password>@localhost:5432/postgres").await;
+    let store = store::Store::new("postgres://postgres:wogwog@localhost:5432/postgres").await;
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
