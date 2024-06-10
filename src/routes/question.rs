@@ -41,7 +41,10 @@ pub async fn update_question(
     Ok(warp::reply::json(&res))
 }
 
-pub async fn delete_question(id: i32, store: Store) -> Result<impl warp::Reply, warp::Rejection> {
+pub async fn delete_question(
+    id: i32,
+    store: Store,
+) -> Result<impl warp::Reply, warp::Rejection> {
     if let Err(e) = store.delete_question(id).await {
         return Err(warp::reject::custom(e));
     }

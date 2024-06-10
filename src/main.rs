@@ -4,16 +4,18 @@ use handle_errors::return_error;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::{http::Method, Filter};
 
+mod profanity;
 mod routes;
 mod store;
 mod types;
 
 #[tokio::main]
 async fn main() {
-    let log_filter = std::env::var("RUST_LOG")
-        .unwrap_or_else(|_| "rust-web-warp-learning=info,warp=error".to_owned());
+    let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
+        "rust-web-warp-learning=info,warp=error".to_owned()
+    });
 
-    let store = store::Store::new("postgres://postgres:<password>@localhost:5432/postgres").await;
+    let store = store::Store::new("POSTGRES_URI").await;
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
@@ -27,7 +29,12 @@ async fn main() {
     let cors = warp::cors()
         .allow_any_origin()
         .allow_header("content-type")
-        .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST]);
+        .allow_methods(&[
+            Method::PUT,
+            Method::DELETE,
+            Method::GET,
+            Method::POST,
+        ]);
 
     let get_questions = warp::get()
         .and(warp::path("questions"))

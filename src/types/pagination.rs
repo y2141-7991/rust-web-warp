@@ -28,7 +28,9 @@ pub struct Pagination {
 /// assert_eq!(p.limit, 1);
 /// assert_eq!(p.offset, 10);
 /// ```
-pub fn extract_pagination(params: HashMap<String, String>) -> Result<Pagination, Error> {
+pub fn extract_pagination(
+    params: HashMap<String, String>,
+) -> Result<Pagination, Error> {
     // Could be improved in the future
     if params.contains_key("limit") && params.contains_key("offset") {
         return Ok(Pagination {
