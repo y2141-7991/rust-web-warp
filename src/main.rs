@@ -14,8 +14,9 @@ async fn main() {
     let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
         "rust-web-warp-learning=info,warp=error".to_owned()
     });
-
-    let store = store::Store::new("POSTGRES_URI").await;
+    let pg_uri = std::env::var("POSTGRES_URI")
+        .expect("Do not have POSTGRES_URI in env");
+    let store = store::Store::new(&pg_uri).await;
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
@@ -72,11 +73,16 @@ async fn main() {
         .and(warp::body::form())
         .and_then(routes::answer::add_answer);
 
+    let hello = warp::get()
+        .and(warp::path("helloworld"))
+        .map(|| "Hello world!");
+
     let routes = get_questions
         .or(update_question)
         .or(add_question)
         .or(delete_question)
         .or(add_answer)
+        .or(hello)
         .with(cors)
         .with(warp::trace::request())
         .recover(return_error);
