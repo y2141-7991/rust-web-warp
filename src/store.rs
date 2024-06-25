@@ -2,9 +2,8 @@ use sqlx::postgres::{PgPool, PgPoolOptions, PgRow};
 use sqlx::Row;
 
 use handle_errors::Error;
-use warp::filters::query::query;
 
-use crate::types::account::{self, Account, AccountId};
+use crate::types::account::{Account, AccountId};
 use crate::types::{
     answer::{Answer, AnswerId, NewAnswer},
     question::{NewQuestion, Question, QuestionId},
@@ -50,7 +49,7 @@ impl Store {
             Ok(questions) => Ok(questions),
             Err(e) => {
                 tracing::event!(tracing::Level::ERROR, "{:?}", e);
-                Err(Error::DatabaseQueryError)
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }
@@ -75,7 +74,7 @@ impl Store {
             Ok(question) => Ok(question),
             Err(e) => {
                 tracing::event!(tracing::Level::ERROR, "{:?}", e);
-                Err(Error::DatabaseQueryError)
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }
@@ -98,7 +97,7 @@ impl Store {
         }).fetch_one(&self.connection).await
         {
             Ok(question) => Ok(question),
-            Err(_e) => Err(Error::DatabaseQueryError),
+            Err(e) => Err(Error::DatabaseQueryError(e)),
         }
     }
 
@@ -112,7 +111,7 @@ impl Store {
             .await
         {
             Ok(_) => Ok(true),
-            Err(_e) => Err(Error::DatabaseQueryError),
+            Err(e) => Err(Error::DatabaseQueryError(e)),
         }
     }
 
@@ -136,7 +135,7 @@ impl Store {
             Ok(answer) => Ok(answer),
             Err(e) => {
                 tracing::event!(tracing::Level::ERROR, "{:?}", e);
-                Err(Error::DatabaseQueryError)
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }
@@ -154,25 +153,24 @@ impl Store {
         .await
         {
             Ok(_) => Ok(true),
-            Err(error) => {
+            Err(e) => {
                 tracing::event!(
                     tracing::Level::ERROR,
-                    code = error
+                    code = e
                         .as_database_error()
                         .unwrap()
                         .code()
                         .unwrap()
                         .parse::<i32>()
                         .unwrap(),
-                    db_message =
-                        error.as_database_error().unwrap().message(),
-                    constraint = error
+                    db_message = e.as_database_error().unwrap().message(),
+                    constraint = e
                         .as_database_error()
                         .unwrap()
                         .constraint()
                         .unwrap()
                 );
-                Err(Error::DatabaseQueryError)
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }
@@ -192,9 +190,9 @@ impl Store {
             .await
         {
             Ok(account) => Ok(account),
-            Err(error) => {
-                tracing::event!(tracing::Level::ERROR, "{:?}", error);
-                Err(Error::DatabaseQueryError)
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }

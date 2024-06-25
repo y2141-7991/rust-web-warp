@@ -80,6 +80,13 @@ async fn main() {
         .and(warp::body::json())
         .and_then(routes::authentication::register);
 
+    let login = warp::post()
+        .and(warp::path("login"))
+        .and(warp::path::end())
+        .and(store_filter.clone())
+        .and(warp::body::json())
+        .and_then(routes::authentication::login);
+
     let hello = warp::get()
         .and(warp::path("helloworld"))
         .map(|| "Hello world!");
@@ -90,6 +97,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .or(registration)
+        .or(login)
         .or(hello)
         .with(cors)
         .with(warp::trace::request())
