@@ -1,6 +1,6 @@
 [package]
 name = "rust-web-warp-learning"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
@@ -24,3 +24,4 @@ rand = "0.8"
 rust-argon2 = "2.1"
 paseto = "2.0"
 chrono = "0.4.19"
+config = { version = "0.14.0", features = ["toml"] }

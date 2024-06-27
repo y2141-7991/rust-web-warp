@@ -1,7 +1,6 @@
 use argon2::Error as ArgonError;
 use reqwest::Error as ReqwestError;
 use reqwest_middleware::Error as MiddlewareReqwestError;
-use sqlx::error;
 use tracing::{event, instrument, Level};
 use warp::{
     filters::{body::BodyDeserializeError, cors::CorsForbidden},

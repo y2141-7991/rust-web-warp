@@ -1,3 +1,4 @@
+use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -14,4 +15,11 @@ pub struct AccountId(pub i32);
 pub struct NewAccount {
     pub email: String,
     pub password: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct Session {
+    pub exp: DateTime<Utc>,
+    pub account_id: AccountId,
+    pub nbf: DateTime<Utc>,
 }
