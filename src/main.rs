@@ -4,6 +4,7 @@ use handle_errors::return_error;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::{http::Method, Filter};
 
+mod config;
 mod profanity;
 mod routes;
 mod store;
@@ -94,7 +95,7 @@ async fn main() {
     let hello = warp::get()
         .and(warp::path("helloworld"))
         .and(routes::authentication::auth())
-        .map(|_| {"Hello world!"});
+        .map(|_| "Hello world!");
 
     let routes = get_questions
         .or(update_question)

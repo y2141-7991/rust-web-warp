@@ -55,11 +55,13 @@ pub async fn update_question(
                 Err(e) => return Err(warp::reject::custom(e)),
             }
         } else {
-            Err(warp::reject::custom(title.expect_err("Expected API call to have failed here")))
+            Err(warp::reject::custom(
+                title.expect_err("Expected API call to have failed here"),
+            ))
         }
     } else {
         Err(warp::reject::custom(handle_errors::Error::Unauthorized))
-    }    
+    }
 }
 
 pub async fn delete_question(
@@ -87,7 +89,7 @@ pub async fn add_question(
     new_question: NewQuestion,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let account_id = session.account_id;
-    
+
     let title = match check_profanity(new_question.title).await {
         Ok(res) => res,
         Err(e) => return Err(warp::reject::custom(e)),

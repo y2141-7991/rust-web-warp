@@ -97,7 +97,7 @@ fn hashed_password(password: &[u8]) -> String {
     argon2::hash_encoded(password, &salt, &config).unwrap()
 }
 
-pub fn  auth(
+pub fn auth(
 ) -> impl Filter<Extract = (Session,), Error = warp::Rejection> + Clone {
     warp::header::<String>("Authorization").and_then(|token: String| {
         let token = match verify_token(token) {
