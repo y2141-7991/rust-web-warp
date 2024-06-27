@@ -24,4 +24,7 @@ rand = "0.8"
 rust-argon2 = "2.1"
 paseto = "2.0"
 chrono = "0.4.19"
-config = { version = "0.14.0", features = ["toml"] }
+dotenv = "0.15.0"
+clap = { version = "4.5.7", features = ["derive"] }
+proc-macro2 = "1.0.37"
+openssl = { version = "0.10.32", features = ["vendored"] }
