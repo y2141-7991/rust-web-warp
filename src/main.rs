@@ -11,13 +11,24 @@ mod store;
 mod types;
 
 #[tokio::main]
-async fn main() {
-    let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
-        "rust-web-warp-learning=info,warp=error".to_owned()
-    });
-    let pg_uri = std::env::var("POSTGRES_URI")
-        .expect("Do not have POSTGRES_URI in env");
-    let store = store::Store::new(&pg_uri).await;
+async fn main() -> Result<(), handle_errors::Error> {
+    let config = config::Config::new().expect("Config can not be set");
+
+    let log_filter = format!(
+        "handle_errors={},rust-web-dev={},warp={}",
+        config.log_level, config.log_level, config.log_level,
+    );
+
+    let store = store::Store::new(&format!(
+        "postgres://{}:{}@{}:{}/{}",
+        config.db_user,
+        config.db_password,
+        config.db_host,
+        config.db_port,
+        config.db_name
+    ))
+    .await
+    .map_err(|e| handle_errors::Error::DatabaseQueryError(e))?;
     let store_filter = warp::any().map(move || store.clone());
 
     tracing_subscriber::fmt()
@@ -109,5 +120,11 @@ async fn main() {
         .with(warp::trace::request())
         .recover(return_error);
 
-    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
+    tracing::info!(
+        "Q&A service build ID {}",
+        env!("RUST_WEB_DEV_VERSION")
+    );
+
+    warp::serve(routes).run(([127, 0, 0, 1], config.port)).await;
+    Ok(())
 }

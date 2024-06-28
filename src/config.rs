@@ -4,8 +4,8 @@ use std::env;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
-struct Config {
-    #[clap(short, long, default_value = "warn")]
+pub struct Config {
+    #[clap(short, long, default_value = "info")]
     pub log_level: String,
 
     #[clap(short, long, default_value = "8080")]
@@ -23,7 +23,7 @@ struct Config {
     #[clap(short, long, default_value = "postgres")]
     pub db_name: String,
 
-    #[clap(long)]
+    #[clap(long, default_value = "need_to_set")]
     pub db_password: String,
 }
 
@@ -69,7 +69,7 @@ impl Config {
                 .parse::<u16>()
                 .map_err(|e| handle_errors::Error::ParseError(e))?,
             db_name,
-            db_password
+            db_password,
         })
     }
 }

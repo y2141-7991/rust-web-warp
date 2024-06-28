@@ -1,5 +1,5 @@
 [package]
-name = "rust-web-warp-learning"
+name = "rust-web-dev"
 version = "1.0.0"
 edition = "2021"
 
@@ -19,7 +19,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 sqlx = { version = "0.7", features = [ "runtime-tokio-rustls", "migrate", "postgres" ] }
 reqwest = { version = "0.12.4", features = ["json"] }
 reqwest-middleware = "0.3.1"
-reqwest-retry = "0.5.0"
+reqwest-retry = "0.6.0"
 rand = "0.8"
 rust-argon2 = "2.1"
 paseto = "2.0"
@@ -28,3 +28,6 @@ dotenv = "0.15.0"
 clap = { version = "4.5.7", features = ["derive"] }
 proc-macro2 = "1.0.37"
 openssl = { version = "0.10.32", features = ["vendored"] }
+
+[build-dependencies]
+platforms = "3.4.0"

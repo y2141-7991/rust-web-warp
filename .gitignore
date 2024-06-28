@@ -2,4 +2,3 @@
 *.lock
 *.env
 *.log
-setup.toml
