@@ -13,11 +13,11 @@ ENV CC='gcc'
 
 RUN cargo build --release
 
-FROM scratch
+FROM ubuntu
 
-WORKDIR /app
+WORKDIR /usr/local/bin
 
-COPY --from=builder /app/target/release/rust-web-dev ./
-COPY --from=builder /app/.env ./
+COPY --from=builder /app/target/release/rust-web-dev .
+COPY --from=builder /app/.env .
 
-CMD ["/app/rust-web-dev"]
+CMD ["./rust-web-dev"]
