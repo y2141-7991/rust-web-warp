@@ -105,8 +105,7 @@ async fn main() -> Result<(), handle_errors::Error> {
 
     let hello = warp::get()
         .and(warp::path("helloworld"))
-        .and(routes::authentication::auth())
-        .map(|_| "Hello world!");
+        .map(|| "Hello world!");
 
     let routes = get_questions
         .or(update_question)
@@ -125,6 +124,6 @@ async fn main() -> Result<(), handle_errors::Error> {
         env!("RUST_WEB_DEV_VERSION")
     );
 
-    warp::serve(routes).run(([127, 0, 0, 1], config.port)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], config.port)).await;
     Ok(())
 }
