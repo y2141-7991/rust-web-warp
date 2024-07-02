@@ -9,6 +9,8 @@ services:
       - '5432:5432'
     volumes:
       - data:/var/lib/postgresql/data
+    networks:
+      - my_net
   
   server:
     container_name: rust-web-dev
@@ -17,8 +19,12 @@ services:
     depends_on:
       - db
     networks:
-      - default
+      - my_net
     ports:
-      - '8080:8080'
+      - '3030:3030'
+
+networks:
+  my_net:
+    driver: brigde
 volumes:
   data:

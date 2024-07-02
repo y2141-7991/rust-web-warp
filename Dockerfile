@@ -18,6 +18,5 @@ FROM ubuntu
 WORKDIR /usr/local/bin
 
 COPY --from=builder /app/target/release/rust-web-dev .
-COPY --from=builder /app/.env .
-
+EXPOSE 3030
 CMD ["./rust-web-dev"]
