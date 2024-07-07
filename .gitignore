@@ -1,4 +1,4 @@
 /target
 *.lock
-*.env
+*env*
 *.log
