@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: myapp
   name: myapp
 spec:
   selector:
@@ -10,6 +12,7 @@ spec:
     metadata:
       labels:
         app: myapp
+      name: myapp
     spec:
       containers:
         - name: myapp
@@ -17,15 +20,15 @@ spec:
           imagePullPolicy: Never
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: "512Mi"
+              cpu: "1"
           ports:
-            - containerPort: 5000 
+            - containerPort: 3030 
           volumeMounts:
             - name: rust-dev-env
-              mountPath: "/usr/local/bin/rust-dev-env"
+              mountPath: /home
           args:
-            - source /usr/local/bin/rust-dev-env/env
+            - source /home/env && sleep 100
 
       volumes:
         - name: rust-dev-env
@@ -38,13 +41,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp
+  name: svc-myapp
+  labels:
+    service: svc-myapp
 spec:
   selector:
     app: myapp
   ports:
-    - port: 5000
-      protocol: TCP
-      targetPort: 5000
-  type: NodePort
-
+    - port: 3030
+      targetPort: 3030
