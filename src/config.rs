@@ -11,16 +11,16 @@ pub struct Config {
     #[clap(short, long, default_value = "8080")]
     pub port: u16,
 
-    #[clap(short, long, default_value = "postgres")]
+    #[clap(long, default_value = "postgres")]
     pub db_user: String,
 
-    #[clap(short, long, default_value = "localhost")]
+    #[clap(long, default_value = "localhost")]
     pub db_host: String,
 
-    #[clap(short, long, default_value = "5432")]
+    #[clap(long, default_value = "5432")]
     pub db_port: u16,
 
-    #[clap(short, long, default_value = "postgres")]
+    #[clap(long, default_value = "postgres")]
     pub db_name: String,
 
     #[clap(long, default_value = "need_to_set")]

@@ -66,8 +66,8 @@ pub async fn check_profanity(
 
 async fn transform_error(
     res: reqwest::Response,
-) -> handle_errors::APILayerError {
-    handle_errors::APILayerError {
+) -> handle_errors::APIError {
+    handle_errors::APIError {
         status: res.status().as_u16(),
         message: res.json::<APIResponse>().await.unwrap().message,
     }

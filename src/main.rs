@@ -5,6 +5,7 @@ use tracing_subscriber::fmt::format::FmtSpan;
 use warp::{http::Method, Filter};
 
 mod config;
+mod openai;
 mod profanity;
 mod routes;
 mod store;
@@ -89,6 +90,14 @@ async fn main() -> Result<(), handle_errors::Error> {
         .and(warp::body::json())
         .and_then(routes::answer::add_answer);
 
+    let auto_answer = warp::post()
+        .and(warp::path("auto-answer"))
+        .and(warp::path::end())
+        .and(routes::authentication::auth())
+        .and(store_filter.clone())
+        .and(warp::body::json())
+        .and_then(routes::answer::auto_answer);
+
     let registration = warp::post()
         .and(warp::path("registration"))
         .and(warp::path::end())
@@ -112,6 +121,7 @@ async fn main() -> Result<(), handle_errors::Error> {
         .or(add_question)
         .or(delete_question)
         .or(add_answer)
+        .or(auto_answer)
         .or(registration)
         .or(login)
         .or(hello)

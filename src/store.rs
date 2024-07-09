@@ -53,6 +53,29 @@ impl Store {
         }
     }
 
+    pub async fn get_question_by_id(
+        &self,
+        question_id: i32,
+    ) -> Result<Question, Error> {
+        match sqlx::query("SELECT * FROM questions WHERE id = $1")
+            .bind(question_id)
+            .map(|row: PgRow| Question {
+                id: QuestionId(row.get("id")),
+                title: row.get("title"),
+                content: row.get("content"),
+                tags: row.get("tags"),
+            })
+            .fetch_one(&self.connection)
+            .await
+        {
+            Ok(question) => Ok(question),
+            Err(e) => {
+                tracing::event!(tracing::Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError(e))
+            }
+        }
+    }
+
     pub async fn is_owner_question(
         &self,
         question_id: i32,
@@ -159,7 +182,7 @@ impl Store {
         account_id: AccountId,
     ) -> Result<Answer, Error> {
         match sqlx::query(
-            "INSERT INTO answers (content, corresponding_question, account_id) VALUES ($1, $2, $3)",
+            "INSERT INTO answers (content, corresponding_question, account_id) VALUES ($1, $2, $3) RETURNING id, content, corresponding_question",
         )
         .bind(new_answer.content)
         .bind(new_answer.question_id.0)
@@ -167,7 +190,7 @@ impl Store {
         .map(|row: PgRow| Answer {
             id: AnswerId(row.get("id")),
             content: row.get("content"),
-            question_id: QuestionId(row.get("question_id")),
+            question_id: QuestionId(row.get("corresponding_question")),
         })
         .fetch_one(&self.connection)
         .await

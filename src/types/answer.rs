@@ -17,3 +17,8 @@ pub struct NewAnswer {
     pub content: String,
     pub question_id: QuestionId,
 }
+
+#[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AutoAnswer {
+    pub question_id: QuestionId,
+}

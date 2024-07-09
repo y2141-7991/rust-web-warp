@@ -16,8 +16,8 @@ pub enum Error {
     DatabaseQueryError(sqlx::Error),
     ReqwestAPIError(ReqwestError),
     MiddlewareReqwestAPIError(MiddlewareReqwestError),
-    ClientError(APILayerError),
-    ServerError(APILayerError),
+    ClientError(APIError),
+    ServerError(APIError),
     ArgonLibraryError(ArgonError),
     WrongPassword,
     CannotDecryptToken,
@@ -25,12 +25,12 @@ pub enum Error {
 }
 
 #[derive(Debug, Clone)]
-pub struct APILayerError {
+pub struct APIError {
     pub status: u16,
     pub message: String,
 }
 
-impl std::fmt::Display for APILayerError {
+impl std::fmt::Display for APIError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "Status: {}, Message: {}", self.status, self.message)
     }
@@ -74,7 +74,7 @@ impl std::fmt::Display for Error {
 }
 
 impl Reject for Error {}
-impl Reject for APILayerError {}
+impl Reject for APIError {}
 
 const DUPLICATE_KEY: u32 = 23505;
 
