@@ -1,7 +1,7 @@
 use reqwest::{header, Client};
 
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::json;
 use std::env;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
