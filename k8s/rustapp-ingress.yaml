@@ -2,54 +2,52 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
   labels:
     name: myingress
 spec:
   ingressClassName: nginx
-  defaultBackend:
-    service:
-      name: app-service
-      port:
-        number: 5000
   rules:
     - host: rustwebapp.com
       http:
         paths:
-          - pathType: Prefix
-            path: "/helloworld"
-            backend:
+          - backend:
               service:
-                name: app-service
+                name: svc-myapp
                 port: 
-                  number: 5000
-          - pathType: Prefix
-            path: "/questions"
-            backend:
+                  number: 3030
+            pathType: Exact
+            path: /helloworld
+            
+          - backend:
               service:
-                name: app-service
+                name: svc-myapp
                 port:
-                  number: 5000
-          - pathType: Prefix
-            path: "/answers"
-            backend:
+                  number: 3030
+            pathType: Prefix
+            path: /questions
+
+          - backend:
               service:
-                name: app-service
+                name: svc-myapp
                 port:
-                  number: 5000
-          - pathType: Prefix
-            path: "/registration"
-            backend:
+                  number: 3030
+            pathType: Prefix
+            path: /answers
+
+          - backend:
               service:
-                name: app-service
+                name: svc-myapp
                 port:
-                  number: 5000
-          - pathType: Prefix
-            path: "/login"
-            backend:
+                  number: 3030
+            pathType: Prefix
+            path: /registration
+
+          - backend:
               service:
-                name: app-service
+                name: svc-myapp
                 port:
-                  number: 5000
+                  number: 3030
+            pathType: Prefix
+            path: /login
+            
 
