@@ -63,3 +63,23 @@ pub async fn generate_answer(
         Err(e) => Err(handle_errors::Error::ReqwestAPIError(e)),
     }
 }
+
+
+#[cfg(test)]
+mod intergration_test_generate_answer {
+    use super::{generate_answer, env};
+
+    #[tokio::test]
+    async fn run() {
+        let key = env::var("OPEN_AI_KEY").expect("Do not have OPEN_AI_KEY in env");
+        let s_slice = &*key;
+        env::set_var("OPEN_AI_KEY", s_slice);
+        auto_answer_question().await;
+    }
+
+    async fn auto_answer_question() {
+        let content = "How are you today?".to_string();
+        let auto_answer = generate_answer(content).await.unwrap();
+        assert!(!auto_answer.is_empty());
+    }
+}
