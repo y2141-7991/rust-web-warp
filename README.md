@@ -1,4 +1,10 @@
-SOURCE
+Run the app
 ===============================
 
-https://www.manning.com/books/rust-web-development
+```bash
+docker build -t rust-web-dev .
+```
+
+```bash
+docker compose --file docker-compose.yml up -d
+```
